@@ -17,6 +17,7 @@ class OrdersController extends Controller
             'prod_list' => json_encode($request->prod_list),
             'total_amount' => $request->total_amount,
             'status'=> 'Placed',
+            'track_time' => Carbon::now(),
             'destination' => $request->location
         ]);
 
@@ -29,8 +30,11 @@ class OrdersController extends Controller
         
         foreach($orders as $order){
             $order->prod_list = json_decode($order->prod_list, true);
+            $order->track_time = Carbon::parse($order->track_time)->format('H:i');
             
         }
         return $orders;
     }
+
+   
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CategoryController;
 use App\Http\Controllers\API\OrdersController;
@@ -24,6 +25,9 @@ Route::get('/getProducts', [CategoryController::class, 'getProducts']);
 Route::get('/category', [CategoryController::class, 'getCategory']);
 Route::get('/getCarts', [CartController::class, 'getCarts']);
 Route::get('/retrieveOrders', [OrdersController::class, 'getOrders']);
+Route::get('/getUserBooks', [BookingController::class, 'getUserBookings']);
+Route::put('/changeBookStatus', [BookingController::class, 'changeBookStatus']);
+
 
 
 
@@ -37,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::delete('/deleteProduct', [CartController::class, 'deleteProduct']);
     Route::post('/placeOrder', [OrdersController::class, 'placeOrder']);
     Route::delete('/deleteUserCart', [CartController::class, 'deleteUserCart']);
+    Route::post('/bookTable', [BookingController::class, 'bookTable']);
    
     
 

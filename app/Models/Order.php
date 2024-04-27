@@ -9,7 +9,7 @@ use Carbon\Carbon;
 class Order extends Model
 {
     use HasFactory;
-    protected $fillable = ['user_id','prod_list','total_amount','status','destination'];
+    protected $fillable = ['user_id','prod_list','total_amount','status','track_time','destination'];
 
     public function getCreatedAtAttribute($value)
     {
