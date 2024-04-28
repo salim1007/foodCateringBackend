@@ -27,6 +27,7 @@ Route::get('/getCarts', [CartController::class, 'getCarts']);
 Route::get('/retrieveOrders', [OrdersController::class, 'getOrders']);
 Route::get('/getUserBooks', [BookingController::class, 'getUserBookings']);
 Route::put('/changeBookStatus', [BookingController::class, 'changeBookStatus']);
+Route::get('/getAllProducts', [ProductController::class, 'getAllProducts']);
 
 
 
