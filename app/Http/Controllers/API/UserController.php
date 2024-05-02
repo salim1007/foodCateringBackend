@@ -59,15 +59,21 @@ class UserController extends Controller
         $user = array();
 
         $user = Auth::user();
+
+        $user_details = $user->user_details;
         
         $categories =  Category::all();
         $user['categories'] = $categories;
 
         $main_course = Category::where('category_name', 'Main Course')->first();
 
-
         $default_product_group = Product::where('category_id', $main_course->id)->get();
         $user['main_course_products'] = $default_product_group;
+
+        $all_products = Product::all();
+        $user['products'] = $all_products;
+
+        $user['user_details'] = $user_details;
 
         return $user;
     }
