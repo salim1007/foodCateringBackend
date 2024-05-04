@@ -43,6 +43,7 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::post('/placeOrder', [OrdersController::class, 'placeOrder']);
     Route::delete('/deleteUserCart', [CartController::class, 'deleteUserCart']);
     Route::post('/bookTable', [BookingController::class, 'bookTable']);
+    Route::post('/storeFavs', [ProductController::class, 'storeFavs']);
    
     
 

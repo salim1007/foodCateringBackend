@@ -5,7 +5,9 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\UserDetails;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -52,6 +54,21 @@ class ProductController extends Controller
     public function getAllProducts(){
         $products = Product::all();
         return $products;
+    }
+
+    public function storeFavs(Request $request){
+        $userFav = UserDetails::where('user_id', Auth::user()->id)->first();
+        if($userFav){
+            $favData = json_encode($request->fav_list);
+            $userFav->fav = $favData;
+            $userFav->save();
+
+            return response()->json([
+                'status'=>201,
+                'message' => 'Favourites updated!'
+            ]);
+        }
+
     }
 
     
