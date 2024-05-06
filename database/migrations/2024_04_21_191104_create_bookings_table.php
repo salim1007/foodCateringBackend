@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('day');
             $table->integer('no_of_people');
             $table->string('status');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
         });
     }
