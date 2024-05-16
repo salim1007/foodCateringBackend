@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use App\Models\Cart;
 use App\Models\Product;
+use App\Models\Rating;
 use App\Models\UserDetails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -68,6 +69,22 @@ class ProductController extends Controller
                 'message' => 'Favourites updated!'
             ]);
         }
+
+    }
+
+    public function rateProduct(Request $request){
+        $product = Rating::where('product_id',$request->prod_id)->where('user_id', $request->user_id)->first();
+        if($product){
+            $product->rating = $request->rate_value;
+            $product->save();
+        }else{
+            Rating::create([
+                'user_id' => $request->user_id,
+                'product_id' => $request->prod_id,
+                'rating' => $request->rate_value
+            ]);
+        }
+
 
     }
 

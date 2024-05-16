@@ -11,12 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_details', function (Blueprint $table) {
-            $table->increments('id');
-            $table->unsignedInteger('user_id')->unique();
-            $table->string('address');
-            $table->json('fav')->nullable();
-            $table->string('status')->nullable();
+        Schema::create('ratings', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('product_id');
+            $table->double('rating');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_details');
+        Schema::dropIfExists('ratings');
     }
 };

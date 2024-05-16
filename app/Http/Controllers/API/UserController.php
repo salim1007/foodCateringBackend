@@ -88,11 +88,6 @@ class UserController extends Controller
         
 
     }
-    
-    
-    
-
-                                                                                                              
 
     public function login(Request $request){
         try {
@@ -134,5 +129,17 @@ class UserController extends Controller
             return false;
         }
 
+    }
+
+    public function updateProfile(Request $request){
+        $user = User::find($request->user_id);
+        if($user){
+            $user->email = $request->email;
+            $user->phone = $request->phone;
+            $user->user_details->address = $request->address;
+            $user->save();
+            $user->user_details->save();
+
+        }
     }
 }
