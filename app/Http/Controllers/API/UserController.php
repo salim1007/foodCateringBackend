@@ -20,22 +20,22 @@ class UserController extends Controller
     public function register(Request $request)
     {
         $user = array();
-        
+
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'phone' => 'required',
             'password' => 'required|confirmed',
             'password_confirmation' => 'required'
-            
+
         ]);
 
         $otp = rand(100000, 999999);
 
         $user = User::create([
-            'name'=> $request->name,
-            'email'=> $request->email,
-            'phone'=> $request->phone,
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
             'type' => 'user',
             'password' => Hash::make($request->password),
             'otp' => $otp
@@ -51,18 +51,40 @@ class UserController extends Controller
             'status' => 'active'
         ]);
 
-      
+
 
         return $user;
     }
 
-    public function getUser(){
+    public function signUpnWithGoogle(Request $request)
+    {
+        $user_email = User::where('email', $request->email)->first();
+
+        if (!$user_email) {
+            $user = User::create([
+                'email' => $request->email,
+                'type' => 'user',
+            ]);
+
+            $userInfo = UserDetails::create([
+                'user_id' => $user->id,
+                'status' => 'active'
+            ]);
+
+            return $user->createToken($request->email)->plainTextToken;
+        } else {
+            return $user_email->createToken($request->email)->plainTextToken;
+        }
+    }
+
+    public function getUser()
+    {
         $user = array();
 
         $user = Auth::user();
 
         $user_details = $user->user_details;
-        
+
         $categories =  Category::all();
         $user['categories'] = $categories;
 
@@ -79,67 +101,66 @@ class UserController extends Controller
         return $user;
     }
 
-    public function getProds(){
-        
+    public function getProds()
+    {
+
 
         $categ = Category::where('category_name', 'Beverages')->first();
         $products = Product::where('category_id', $categ->id)->get();
         return $products;
-        
-
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         try {
-          
+
             $request->validate([
                 'email' => 'required|email',
                 'password' => 'required'
             ]);
-    
+
             $user = User::where('email', $request->email)->first();
-            
-            if(!$user || !Hash::check($request->password, $user->password)) {
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
                 throw ValidationException::withMessages([
                     'email' => ['The provided credentials are incorrect!']
                 ]);
             }
-    
+
             return $user->createToken($request->email)->plainTextToken;
         } catch (\Exception $e) {
             Log::error('Error during login: ' . $e->getMessage());
             return response()->json(['error' => 'Server error'], 500);
         }
-        
     }
 
 
-    
 
-    public function verifyOtp(Request $request){
+
+    public function verifyOtp(Request $request)
+    {
         $user = User::where('email', $request->email)->first();
 
-        if($user){
-            if($user->otp == $request->otp){
-                return true;
-            }else{
+        if ($user) {
+            if ($user->otp == $request->otp) {
+                return $user->createToken($request->email)->plainTextToken;
+            } else {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
-
     }
 
-    public function updateProfile(Request $request){
+    public function updateProfile(Request $request)
+    {
         $user = User::find($request->user_id);
-        if($user){
+        if ($user) {
             $user->email = $request->email;
             $user->phone = $request->phone;
             $user->user_details->address = $request->address;
             $user->save();
             $user->user_details->save();
-
         }
     }
 }

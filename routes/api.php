@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 Route::post('/register', [UserController::class,'register']);
+Route::post('/signUpnWithGoogle', [UserController::class, 'signUpnWithGoogle']);
 Route::post('/verifyOtp', [UserController::class,'verifyOtp']);
 Route::post('/login', [UserController::class,'login']);
 Route::get('/getProducts', [CategoryController::class, 'getProducts']);
