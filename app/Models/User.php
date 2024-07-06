@@ -62,4 +62,9 @@ class User extends Authenticatable
     public function bookings(){
         return $this->hasMany(Booking::class, 'user_id');
     }
+
+    public function user_notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id');
+    }
 }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\API\BookingController;
 use App\Http\Controllers\API\CartController;
 use App\Http\Controllers\API\CategoryController;
+use App\Http\Controllers\API\NotificationController;
 use App\Http\Controllers\API\OrdersController;
 use App\Http\Controllers\API\ProductController;
 use App\Http\Controllers\API\UserController;
@@ -21,6 +22,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [UserController::class,'register']);
 Route::post('/signUpnWithGoogle', [UserController::class, 'signUpnWithGoogle']);
 Route::post('/verifyOtp', [UserController::class,'verifyOtp']);
+Route::post('/verifyEmail', [UserController::class,'verifyEmail']);
 Route::post('/login', [UserController::class,'login']);
 Route::get('/getProducts', [CategoryController::class, 'getProducts']);
 Route::get('/category', [CategoryController::class, 'getCategory']);
@@ -31,6 +33,11 @@ Route::put('/changeBookStatus', [BookingController::class, 'changeBookStatus']);
 Route::get('/getAllProducts', [ProductController::class, 'getAllProducts']);
 Route::post('/rateProduct', [ProductController::class, 'rateProduct']);
 Route::put('/updateProfile', [UserController::class, 'updateProfile']);
+Route::get('/getNotifications', [NotificationController::class, 'getNotifications']);
+Route::put('/updateNotifications', [NotificationController::class, 'updateNotifications']);
+Route::patch('/addNewPassword', [UserController::class, 'addNewPassword']);
+Route::delete('/removeUser', [UserController::class, 'removeUser']);
+
 
 
 
@@ -47,7 +54,8 @@ Route::middleware('auth:sanctum')->group(function() {
     Route::delete('/deleteUserCart', [CartController::class, 'deleteUserCart']);
     Route::post('/bookTable', [BookingController::class, 'bookTable']);
     Route::post('/storeFavs', [ProductController::class, 'storeFavs']);
-   
-    
+    Route::post('/logout', [UserController::class,'logout']);
+
+
 
 });

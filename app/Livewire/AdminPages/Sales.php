@@ -2,6 +2,7 @@
 
 namespace App\Livewire\AdminPages;
 
+use App\Models\Advertisement;
 use App\Models\Category;
 use App\Models\Product;
 use Livewire\Component;
@@ -20,8 +21,10 @@ class Sales extends Component
     public $small_size;
     public $medium_size;
     public $large_size;
+    public $ad_image;
 
     public $path;
+    public $ad_path;
    
 
     public function submitCategory(){
@@ -73,6 +76,26 @@ class Sales extends Component
 
         $this->reset('product_name','product_category','product_pic','prod_description','product_price');
         session()->flash('success_product','Product Added Successfully!');
+
+    }
+
+    public function submitAd(){
+        $this->validate([
+            'ad_image' => 'required|file|mimes:png,jpeg,jpg,webp|max:2048'
+        ]);
+        if($this->ad_image){
+            $this->ad_path = $this->ad_image->store('adImages','public');
+        }else{
+            $this->ad_image = null;
+        }
+
+        Advertisement::create([
+            'ad_path' => $this->ad_path,
+        ]);
+
+        $this->reset('ad_image');
+        session()->flash('ad_success', 'Ad posted successfully!');
+
 
     }
     public function render()

@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
-    public function addProductToCart(Request $request){
+    public function addProductToCart(Request $request)
+    {
         $request->validate([
             'user_id' => 'required',
             'prod_id' => 'required',
@@ -21,14 +22,13 @@ class ProductController extends Controller
             'total_price' => 'required',
         ]);
 
-        if(Cart::where('user_id', $request->user_id)->where('prod_id', $request->prod_id)->exists()){
+        if (Cart::where('user_id', $request->user_id)->where('prod_id', $request->prod_id)->exists()) {
             return response()->json([
                 'message' => 'Product already added to cart!',
                 'status' => 409,
                 'cartData' => null
             ],);
-
-        }else{
+        } else {
 
             $cartData = Cart::create([
                 'user_id' => $request->user_id,
@@ -45,48 +45,51 @@ class ProductController extends Controller
                 'status' => 201,
                 'message' => 'Product Added to Cart!'
             ],);
-
-
         }
-
-        
     }
 
-    public function getAllProducts(){
+    public function getAllProducts()
+    {
         $products = Product::all();
+        foreach ($products as $product) {
+            $average_rating = $product->ratings->avg('rating');
+            $product['avg_product_rating'] = $average_rating;
+        }
         return $products;
     }
 
-    public function storeFavs(Request $request){
+    public function storeFavs(Request $request)
+    {
         $userFav = UserDetails::where('user_id', Auth::user()->id)->first();
-        if($userFav){
+        if ($userFav) {
             $favData = json_encode($request->fav_list);
             $userFav->fav = $favData;
             $userFav->save();
 
             return response()->json([
-                'status'=>201,
+                'status' => 201,
                 'message' => 'Favourites updated!'
             ]);
         }
-
     }
 
-    public function rateProduct(Request $request){
-        $product = Rating::where('product_id',$request->prod_id)->where('user_id', $request->user_id)->first();
-        if($product){
+    public function rateProduct(Request $request)
+    {
+        $product = Rating::where('product_id', $request->prod_id)->where('user_id', $request->user_id)->first();
+        if ($product) {
             $product->rating = $request->rate_value;
             $product->save();
-        }else{
+        } else {
             Rating::create([
                 'user_id' => $request->user_id,
                 'product_id' => $request->prod_id,
                 'rating' => $request->rate_value
             ]);
         }
-
-
     }
 
-    
+    public function getProductRating()
+    {
+        //
+    }
 }

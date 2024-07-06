@@ -98,4 +98,24 @@
                 Product</button>
         </form>
     </div>
+    <div>
+        <form wire:submit='submitAd'>
+            @if (session()->has('ad_success'))
+            <span class="mb-2 bg-green-300 text-sm rounded-md p-2">{{session('ad_success')}}</span>
+            @endif
+            <div class="font-bold mb-4 mt-6">Advertisements(Ads)</div>
+            <div class="flex flex-col">
+                <label for="ad_image">Ad Image:</label>
+                <input wire:model='ad_image' class="bg-gray-200 rounded-md p-2 mb-3" type="file" name='ad_image'>
+                @error('ad_image')
+                <span class="italic text-red-400 text-sm">Ad image is required</span>
+                @enderror
+                @if ($ad_image)
+                <img class=" rounded-md w-44 h-44" src="{{ $ad_image->temporaryUrl() }}" />
+                @endif
+            </div>
+            <button type="submit" class="bg-gray-200  hover:bg-gray-400 hover:text-black w-fit rounded-md p-2">Post
+                Ad</button>
+        </form>
+    </div>
 </div>

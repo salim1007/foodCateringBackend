@@ -9,25 +9,24 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-        public function getProducts(Request $request){
-            $products = array();
+    public function getProducts(Request $request)
+    {
+        $categ = Category::where('category_name', $request->category)->first();
 
-            $categ = Category::where('category_name', $request->category)->first();
-            $products = Product::where('category_id', $categ->id)->get();
-            return $products;
+        $products = $categ->products()->get();
 
+        foreach ($products as $product) {
+            $average_rating = $product->ratings->avg('rating');
+            $product['avg_product_rating'] = $average_rating;
         }
 
-        public function getCategory(Request $request){
-            $request->validate([
-                'category_id' => 'required'
-            ]);
-            
-            $category = Category::where('id', $request->category_id)->first();
-            return $category;
-        }
+        return $products;
+    }
 
 
- 
-
+    public function getCategory(Request $request)
+    {
+        $category = Category::where('id', $request->category_id)->first();
+        return $category;
+    }
 }

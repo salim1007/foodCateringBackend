@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -26,8 +27,8 @@ class BookingController extends Controller
 
     public function getUserBookings(Request $request){
         try {
-            $bookings = Booking::where('user_id', $request->user_id)->get();
-            return $bookings;
+            $user = User::where('id', $request->user_id)->first();
+            return $user->bookings;
         } catch (\Exception $e) {
             // Log the error message to the console
             Log::error($e->getMessage());
@@ -35,7 +36,7 @@ class BookingController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
+
     public function changeBookStatus(Request $request){
         $findBooking = Booking::find($request->book_id);
         if($findBooking){
